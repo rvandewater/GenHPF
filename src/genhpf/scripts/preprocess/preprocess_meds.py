@@ -437,10 +437,16 @@ def meds_to_remed(
                 print(row[column_name_idcs[col_name]][event_index])
                 if col_event is not None:
                     col_event = str(col_event)
-                    if col_name == "code":
-                        if col_event in codes_metadata and codes_metadata[col_event] != "":
-                            col_event = codes_metadata[col_event]
-                        else:
+                    # if col_name == "code":
+                    #     if col_event in codes_metadata and codes_metadata[col_event] != "":
+                    #         col_event = codes_metadata[col_event]
+                    #     else:
+                    #         do_break = False
+                    # safely resolve description: check for None or empty string
+                    desc = codes_metadata.get(col_event)
+                    if desc is not None and desc != "":
+                        col_event = desc
+                    else:
                             do_break = False
                             items = col_event.split("//")
                             is_code = [bool(code_matching_pattern.fullmatch(item)) for item in items]
@@ -491,7 +497,9 @@ def meds_to_remed(
                             internal_offset += (end - start) * 2
 
                         col_event = re.sub(r"([0-9\.])", r" \1 ", col_event)
-
+                    if col_event is None:
+                        print("skipped col_event")
+                        continue
                     col_name_offset.append((len(event), len(event) + len(col_name)))
                     event += " " + col_name + " " + col_event
             if len(event) > 0:
