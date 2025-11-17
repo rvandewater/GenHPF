@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 from argparse import ArgumentParser
+import argparse
 from bisect import bisect_left, bisect_right
 from datetime import datetime
 from pathlib import Path
@@ -87,10 +88,10 @@ def get_parser():
     )
     parser.add_argument(
         "--debug",
+        action=argparse.BooleanOptionalAction,
+        default=False,
         help="whether or not to enable the debug mode, which forces the script to be run with "
-        "only one worker.",
-        action="store_true",
-        default=False
+        "only one worker and reduces patient sequence length to 100."
     )
     parser.add_argument(
         "--workers",
