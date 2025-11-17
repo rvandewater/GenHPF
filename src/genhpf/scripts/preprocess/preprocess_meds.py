@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 from argparse import ArgumentParser
+from argparse import BooleanOptionalAction
 from bisect import bisect_left, bisect_right
 from datetime import datetime
 from pathlib import Path
@@ -91,7 +92,7 @@ def get_parser():
         default=False,
         help="whether or not to enable the debug mode, which forces the script to be run with "
         "only one worker.",
-        action=ArgumentParser.BooleanOptionalAction
+        action=BooleanOptionalAction
     )
     parser.add_argument(
         "--workers",
