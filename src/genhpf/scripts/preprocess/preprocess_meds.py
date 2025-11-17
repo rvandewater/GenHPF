@@ -122,7 +122,7 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
     print("debug")
-    print("args.debug:", args.debug, "type:", type(args.debug))
+    print("args.debug:", args.debug)
     root_path = Path(args.root)
     output_dir = Path(args.output_dir)
     metadata_dir = Path(args.metadata_dir)
