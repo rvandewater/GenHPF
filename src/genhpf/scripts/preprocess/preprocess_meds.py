@@ -498,7 +498,7 @@ def meds_to_remed(
 
                         col_event = re.sub(r"([0-9\.])", r" \1 ", col_event)
                     if col_event is None:
-                        print("skipped col_event")
+                        logger.warning(f"Skipped col_event for col_name {col_name} because it is None")
                         continue
                     col_name_offset.append((len(event), len(event) + len(col_name)))
                     event += " " + col_name + " " + col_event
