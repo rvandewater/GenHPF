@@ -433,6 +433,8 @@ def meds_to_remed(
                     continue
 
                 col_event = row[column_name_idcs[col_name]][event_index]
+                print(f"col_name: {col_name}")
+                print(row[column_name_idcs[col_name]][event_index])
                 if col_event is not None:
                     col_event = str(col_event)
                     if col_name == "code":
@@ -604,6 +606,7 @@ def meds_to_remed(
     ).agg(pl.all())
 
     if debug:
+        print("debug_mode is on!")
         df_chunk = df_chunk.with_columns(
             [
             pl.col("time").map_elements(lambda x: x[-100:], return_dtype=pl.List(pl.List(str))),
@@ -639,6 +642,7 @@ def meds_to_remed(
             times = np.concatenate(sample[2])
             data_indices = np.concatenate(sample[3])
             if debug:
+                print("debug_mode is on!")
                 data_indices = data_indices[-100:]
                 times = times[-100:]
 
