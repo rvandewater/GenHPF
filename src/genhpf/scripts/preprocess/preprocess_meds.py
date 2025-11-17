@@ -319,7 +319,6 @@ def main():
         data = data.with_columns(
             pl.col("time").list.sample(n=pl.col("code").list.len(), with_replacement=True)
         )
-        print(f"debug mode:{args.debug}")
         if args.debug:
             data = data[:5000]
 
@@ -643,7 +642,6 @@ def meds_to_remed(
             times = np.concatenate(sample[2])
             data_indices = np.concatenate(sample[3])
             if debug:
-                print("debug_mode is on!")
                 data_indices = data_indices[-100:]
                 times = times[-100:]
 
