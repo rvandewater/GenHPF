@@ -444,30 +444,29 @@ def meds_to_remed(
                     #         do_break = False
                     # safely resolve description: check for None or empty string
                     desc = codes_metadata.get(col_event)
-                    if desc is not None and desc != "":
-                        col_event = desc
-                    else:
-                        do_break = False
-                        items = col_event.split("//")
-                        is_code = [bool(code_matching_pattern.fullmatch(item)) for item in items]
-                        if True in is_code:
-                            if d_items is not None and d_labitems is not None:
-                                code_idx = is_code.index(True)
-                                code = items[code_idx]
+                if desc is not None and desc != "":
+                    col_event = desc
+                else:
+                    do_break = False
+                    items = col_event.split("//")
+                    is_code = [bool(code_matching_pattern.fullmatch(item)) for item in items]
+                    if True in is_code:
+                        if d_items is not None and d_labitems is not None:
+                            code_idx = is_code.index(True)
+                            code = items[code_idx]
 
-                                if code in d_items:
-                                    desc = d_items[code]
-                                elif code in d_labitems:
-                                    desc = d_labitems[code]
-                                else:
-                                    do_break = True
-
-                                if not do_break:
-                                    items[code_idx] = desc
-                                    col_event = "//".join(items)
+                            if code in d_items:
+                                desc = d_items[code]
+                            elif code in d_labitems:
+                                desc = d_labitems[code]
                             else:
                                 do_break = True
 
+                            if not do_break:
+                                items[code_idx] = desc
+                                col_event = "//".join(items)
+                        else:
+                            do_break = True
                     if do_break and col_event not in warned_codes:
                         warned_codes.append(col_event)
                         logger.warning(
