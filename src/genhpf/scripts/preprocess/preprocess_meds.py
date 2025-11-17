@@ -88,7 +88,6 @@ def get_parser():
     parser.add_argument(
         "--debug",
         type=bool,
-        default=False,
         help="whether or not to enable the debug mode, which forces the script to be run with "
         "only one worker.",
         action="store_true",
