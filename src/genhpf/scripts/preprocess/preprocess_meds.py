@@ -88,10 +88,10 @@ def get_parser():
     )
     parser.add_argument(
         "--debug",
-        action=argparse.BooleanOptionalAction,
+        type=lambda x: {'true': True, 'false': False}[x.lower()],
         default=False,
         help="whether or not to enable the debug mode, which forces the script to be run with "
-        "only one worker and reduces patient sequence length to 100."
+        "only one worker."
     )
     parser.add_argument(
         "--workers",
