@@ -121,8 +121,6 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-    print("debug")
-    print("args.debug:", args.debug)
     root_path = Path(args.root)
     output_dir = Path(args.output_dir)
     metadata_dir = Path(args.metadata_dir)
@@ -130,6 +128,7 @@ def main():
 
     num_workers = max(args.workers, 1)
     if args.debug:
+        print("debug mode is ON")
         num_workers = 1
         os.environ["RAYON_RS_NUM_CPUS"] = "1"
     else:
