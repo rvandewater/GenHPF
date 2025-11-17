@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 from argparse import ArgumentParser
+import argparse
 from bisect import bisect_left, bisect_right
 from datetime import datetime
 from pathlib import Path
@@ -87,7 +88,7 @@ def get_parser():
     )
     parser.add_argument(
         "--debug",
-        type=bool,
+        type=lambda x: {'true': True, 'false': False}[x.lower()],
         default=False,
         help="whether or not to enable the debug mode, which forces the script to be run with "
         "only one worker."
@@ -120,7 +121,6 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-
     root_path = Path(args.root)
     output_dir = Path(args.output_dir)
     metadata_dir = Path(args.metadata_dir)
@@ -128,6 +128,7 @@ def main():
 
     num_workers = max(args.workers, 1)
     if args.debug:
+        print("debug mode is ON")
         num_workers = 1
         os.environ["RAYON_RS_NUM_CPUS"] = "1"
     else:
@@ -318,7 +319,6 @@ def main():
         data = data.with_columns(
             pl.col("time").list.sample(n=pl.col("code").list.len(), with_replacement=True)
         )
-
         if args.debug:
             data = data[:5000]
 
@@ -433,11 +433,20 @@ def meds_to_remed(
                     continue
 
                 col_event = row[column_name_idcs[col_name]][event_index]
+                # print(f"col_name: {col_name}")
+                # print(row[column_name_idcs[col_name]][event_index])
                 if col_event is not None:
                     col_event = str(col_event)
+                    # if col_name == "code":
+                    #     if col_event in codes_metadata and codes_metadata[col_event] != "":
+                    #         col_event = codes_metadata[col_event]
+                    #     else:
+                    #         do_break = False
+                    # safely resolve description: check for None or empty string
                     if col_name == "code":
-                        if col_event in codes_metadata and codes_metadata[col_event] != "":
-                            col_event = codes_metadata[col_event]
+                        desc = codes_metadata.get(col_event)
+                        if desc is not None and desc != "":
+                            col_event = desc
                         else:
                             do_break = False
                             items = col_event.split("//")
@@ -459,7 +468,6 @@ def meds_to_remed(
                                         col_event = "//".join(items)
                                 else:
                                     do_break = True
-
                             if do_break and col_event not in warned_codes:
                                 warned_codes.append(col_event)
                                 logger.warning(
@@ -489,7 +497,9 @@ def meds_to_remed(
                             internal_offset += (end - start) * 2
 
                         col_event = re.sub(r"([0-9\.])", r" \1 ", col_event)
-
+                    if col_event is None:
+                        logger.warning(f"Skipped col_event for col_name {col_name} because it is None")
+                        continue
                     col_name_offset.append((len(event), len(event) + len(col_name)))
                     event += " " + col_name + " " + col_event
             if len(event) > 0:
@@ -604,6 +614,7 @@ def meds_to_remed(
     ).agg(pl.all())
 
     if debug:
+        print("debug_mode is on!")
         df_chunk = df_chunk.with_columns(
             [
             pl.col("time").map_elements(lambda x: x[-100:], return_dtype=pl.List(pl.List(str))),
