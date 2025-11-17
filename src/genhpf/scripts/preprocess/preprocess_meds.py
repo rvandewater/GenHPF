@@ -91,7 +91,7 @@ def get_parser():
         default=False,
         help="whether or not to enable the debug mode, which forces the script to be run with "
         "only one worker.",
-        action=argparse.BooleanOptionalAction
+        action=ArgumentParser.BooleanOptionalAction
     )
     parser.add_argument(
         "--workers",
