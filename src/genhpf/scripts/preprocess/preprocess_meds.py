@@ -434,8 +434,8 @@ def meds_to_remed(
                     continue
 
                 col_event = row[column_name_idcs[col_name]][event_index]
-                print(f"col_name: {col_name}")
-                print(row[column_name_idcs[col_name]][event_index])
+                # print(f"col_name: {col_name}")
+                # print(row[column_name_idcs[col_name]][event_index])
                 if col_event is not None:
                     col_event = str(col_event)
                     if col_name == "code":
