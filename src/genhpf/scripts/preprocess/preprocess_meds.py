@@ -377,11 +377,20 @@ def main():
 
                 num_valid_data_chunks = sum(map(lambda x: len(x) > 0, data_chunks))
                 if num_valid_data_chunks < num_workers:
-                    raise ValueError(
+                    # raise ValueError(
+                    #     "Number of valid data chunks (= number of unique subjects) were smaller "
+                    #     "than the specified num workers (--workers) due to the small size of data. "
+                    #     "Consider reducing the number of workers."
+                    # )
+                    logger.warning(
                         "Number of valid data chunks (= number of unique subjects) were smaller "
                         "than the specified num workers (--workers) due to the small size of data. "
                         "Consider reducing the number of workers."
                     )
+                    logger.info(
+                        f"Adjusting the number of workers from {num_workers} to valid chunks: {num_valid_data_chunks}."
+                    )
+                    num_workers = num_valid_data_chunks
 
                 pool = multiprocessing.get_context("spawn").Pool(processes=num_workers)
                 # the order is preserved
