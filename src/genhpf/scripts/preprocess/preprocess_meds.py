@@ -390,7 +390,7 @@ def main():
                     logger.info(
                         f"Adjusting the number of workers from {num_workers} to valid chunks: {num_valid_data_chunks}."
                     )
-                    num_workers = num_valid_data_chunks
+                    n_processes = num_valid_data_chunks
 
                 pool = multiprocessing.get_context("spawn").Pool(processes=n_processes)
                 # the order is preserved
