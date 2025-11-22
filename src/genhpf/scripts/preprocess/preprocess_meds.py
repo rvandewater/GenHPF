@@ -392,7 +392,7 @@ def main():
                     )
                     num_workers = num_valid_data_chunks
 
-                pool = multiprocessing.get_context("spawn").Pool(processes=num_workers)
+                pool = multiprocessing.get_context("spawn").Pool(processes=n_processes)
                 # the order is preserved
                 length_per_subject_gathered = pool.map(meds_to_remed_partial, data_chunks)
                 pool.close()
