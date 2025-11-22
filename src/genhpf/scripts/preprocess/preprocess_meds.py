@@ -374,7 +374,7 @@ def main():
                 for subject_id_chunk in subject_id_chunks:
                     data_chunks.append(data.filter(pl.col("subject_id").is_in(subject_id_chunk)))
                 del data
-
+                n_processes = num_workers
                 num_valid_data_chunks = sum(map(lambda x: len(x) > 0, data_chunks))
                 if num_valid_data_chunks < num_workers:
                     # raise ValueError(
