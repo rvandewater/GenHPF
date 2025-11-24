@@ -376,7 +376,7 @@ def main():
                 del data
                 n_processes = num_workers
                 num_valid_data_chunks = sum(map(lambda x: len(x) > 0, data_chunks))
-                if num_valid_data_chunks < num_workers:
+                if num_valid_data_chunks < n_processes:
                     # raise ValueError(
                     #     "Number of valid data chunks (= number of unique subjects) were smaller "
                     #     "than the specified num workers (--workers) due to the small size of data. "
@@ -388,7 +388,7 @@ def main():
                         "Consider reducing the number of workers."
                     )
                     logger.info(
-                        f"Adjusting the number of workers from {num_workers} to valid chunks: {num_valid_data_chunks}."
+                        f"Adjusting the number of workers from {n_processes} to valid chunks: {num_valid_data_chunks}."
                     )
                     n_processes = num_valid_data_chunks
 
@@ -399,7 +399,7 @@ def main():
                 pool.join()
                 del data_chunks
 
-            if len(length_per_subject_gathered) != num_workers:
+            if len(length_per_subject_gathered) != n_processes:
                 raise ValueError(
                     "Number of processed workers were smaller than the specified num workers "
                     "(--workers) due to the small size of data. Consider reducing the number of "
