@@ -374,23 +374,32 @@ def main():
                 for subject_id_chunk in subject_id_chunks:
                     data_chunks.append(data.filter(pl.col("subject_id").is_in(subject_id_chunk)))
                 del data
-
+                n_processes = num_workers
                 num_valid_data_chunks = sum(map(lambda x: len(x) > 0, data_chunks))
-                if num_valid_data_chunks < num_workers:
-                    raise ValueError(
+                if num_valid_data_chunks < n_processes:
+                    # raise ValueError(
+                    #     "Number of valid data chunks (= number of unique subjects) were smaller "
+                    #     "than the specified num workers (--workers) due to the small size of data. "
+                    #     "Consider reducing the number of workers."
+                    # )
+                    logger.warning(
                         "Number of valid data chunks (= number of unique subjects) were smaller "
                         "than the specified num workers (--workers) due to the small size of data. "
                         "Consider reducing the number of workers."
                     )
+                    logger.info(
+                        f"Adjusting the number of workers from {n_processes} to valid chunks: {num_valid_data_chunks}."
+                    )
+                    n_processes = num_valid_data_chunks
 
-                pool = multiprocessing.get_context("spawn").Pool(processes=num_workers)
+                pool = multiprocessing.get_context("spawn").Pool(processes=n_processes)
                 # the order is preserved
                 length_per_subject_gathered = pool.map(meds_to_remed_partial, data_chunks)
                 pool.close()
                 pool.join()
                 del data_chunks
 
-            if len(length_per_subject_gathered) != num_workers:
+            if len(length_per_subject_gathered) != n_processes:
                 raise ValueError(
                     "Number of processed workers were smaller than the specified num workers "
                     "(--workers) due to the small size of data. Consider reducing the number of "
