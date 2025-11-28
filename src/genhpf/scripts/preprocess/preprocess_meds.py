@@ -601,6 +601,12 @@ def meds_to_remed(
 
     for row in progress_bar:
         events_data.append(meds_to_remed_unit(row))
+        
+    # Guard against empty events_data
+    if not events_data:
+        logger.warning(f"Worker-{worker_id}: No events data generated. Returning empty result.")
+        return {}
+    
     data_length = list(map(len, events_data))
     data_index_offset = np.zeros(len(data_length), dtype=np.int64)
     data_index_offset[1:] = np.cumsum(data_length[:-1])
