@@ -399,12 +399,12 @@ def main():
                 pool.join()
                 del data_chunks
 
-            if len(length_per_subject_gathered) != n_processes:
-                raise ValueError(
-                    "Number of processed workers were smaller than the specified num workers "
-                    "(--workers) due to the small size of data. Consider reducing the number of "
-                    "workers."
-                )
+            # if len(length_per_subject_gathered) != n_processes:
+            #     raise ValueError(
+            #         "Number of processed workers were smaller than the specified num workers "
+            #         "(--workers) due to the small size of data. Consider reducing the number of "
+            #         "workers."
+            #     )
 
             for length_per_subject in length_per_subject_gathered:
                 for subject_id, (length, shard_id) in length_per_subject.items():
@@ -601,7 +601,7 @@ def meds_to_remed(
 
     for row in progress_bar:
         events_data.append(meds_to_remed_unit(row))
-        
+
     # Guard against empty events_data
     if not events_data:
         logger.warning(f"Worker-{worker_id}: No events data generated. Returning empty result.")
