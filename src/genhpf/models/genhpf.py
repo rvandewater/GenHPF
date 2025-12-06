@@ -99,9 +99,9 @@ class GenHPF(nn.Module):
 
         self.word_embeddings = nn.Embedding(cfg.vocab_size, cfg.encoder_embed_dim, padding_idx=0)
         if self.embedding_method == "text":
-            # we currently use 7 token types and 16 digit places in this version
+            # we currently use 7 token types and 128 digit places in this version
             self.token_type_vocab_size = 7
-            self.digit_place_vocab_size = 16
+            self.digit_place_vocab_size = 128
             self.token_type_embeddings = nn.Embedding(
                 self.token_type_vocab_size, cfg.encoder_embed_dim, padding_idx=0
             )
