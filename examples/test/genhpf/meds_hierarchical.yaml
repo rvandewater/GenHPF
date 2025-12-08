@@ -35,7 +35,7 @@ distributed_training:
 criterion:
   _name: binary_cross_entropy
   task_names:
-    - mortality
+    - meds_binary_classification_task
   num_labels:
     - 1
 
